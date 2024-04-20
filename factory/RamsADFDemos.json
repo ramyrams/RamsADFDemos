@@ -1,0 +1,9 @@
+{
+	"name": "RamsADFDemos",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "d1eefc45-7a8b-4de0-822d-f26d4a857b65",
+		"tenantId": "46fda763-bf63-4904-aa4b-106009fedd30"
+	}
+}
