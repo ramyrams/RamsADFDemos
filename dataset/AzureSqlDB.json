@@ -3,7 +3,13 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AZSQLServer",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"SQLServerPath": "ramssql22.database.windows.net",
+				"DBName": "mynewdb",
+				"Username": "sasa",
+				"Password": "REams1234"
+			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
