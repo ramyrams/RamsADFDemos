@@ -1,0 +1,55 @@
+{
+	"name": "Get data from API - Web Activity",
+	"properties": {
+		"description": "- Web Activity\n- Set Variable",
+		"activities": [
+			{
+				"name": "GetUsers_FromAPI",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://reqres.in/api/users?page=2"
+				}
+			},
+			{
+				"name": "var_UserArray",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "GetUsers_FromAPI",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "APIOut",
+					"value": {
+						"value": "@activity('GetUsers_FromAPI').output.data",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"APIOut": {
+				"type": "Array"
+			}
+		},
+		"annotations": []
+	}
+}
