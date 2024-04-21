@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Call SP",
+				"name": "Call Scalar SP",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -46,7 +46,7 @@
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "Call SP",
+						"activity": "Call Scalar SP",
 						"dependencyConditions": [
 							"Succeeded"
 						]
