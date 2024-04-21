@@ -1,0 +1,14 @@
+CREATE PROCEDURE AddNumbers
+    @Num1 INT,
+    @Num2 INT,
+    @Result INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Perform addition
+    SET @Result = @Num1 + @Num2;
+    
+    -- Return the result
+    SELECT @Result AS Result;
+END;
