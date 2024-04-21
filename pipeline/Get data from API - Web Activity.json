@@ -1,7 +1,7 @@
 {
 	"name": "Get data from API - Web Activity",
 	"properties": {
-		"description": "- Web Activity\n- Set Variable",
+		"description": "- Web Activity\n- Set Variable\n\nhttps://medium.com/@rao.mohsin.54/streamlining-data-flow-save-web-activity-to-blob-storage-in-azure-data-factory-700a67c95801\n",
 		"activities": [
 			{
 				"name": "GetUsers_FromAPI",
@@ -40,6 +40,37 @@
 					"variableName": "APIOut",
 					"value": {
 						"value": "@activity('GetUsers_FromAPI').output.data",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "var_UserArray",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "PUT",
+					"headers": {
+						"x-ms-blob-type": "BlockBlob"
+					},
+					"url": "https://straccdata.blob.core.windows.net/mycontainer?sp=racwdl&st=2024-04-21T01:04:27Z&se=2024-04-21T09:04:27Z&spr=https&sv=2022-11-02&sr=c&sig=yUvhUtAauuD4Er9Zvc0vsQTJit182mroXvGJ0WzPdg4%3D",
+					"body": {
+						"value": "@activity('GetUsers_FromAPI').output",
 						"type": "Expression"
 					}
 				}
