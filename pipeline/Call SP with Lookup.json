@@ -42,7 +42,7 @@
 				}
 			},
 			{
-				"name": "Set variable1",
+				"name": "Set SP Output",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
