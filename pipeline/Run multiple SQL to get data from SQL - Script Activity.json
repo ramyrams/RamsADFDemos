@@ -1,0 +1,44 @@
+{
+	"name": "Run multiple SQL to get data from SQL - Script Activity",
+	"properties": {
+		"activities": [
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AZSQLServer",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"SQLServerPath": "ramssql22.database.windows.net",
+						"DBName": "mynewdb",
+						"Username": "sasa",
+						"Password": "REams1234"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "SELECT * FROM [SalesLT].[Customer]"
+						},
+						{
+							"type": "Query",
+							"text": "SELECT count(*) as TotalCount FROM [SalesLT].[Customer]\n"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
