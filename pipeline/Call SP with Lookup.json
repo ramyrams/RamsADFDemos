@@ -60,7 +60,7 @@
 				"typeProperties": {
 					"variableName": "SPOut",
 					"value": {
-						"value": "@activity('Call SP').output.firstRow.result",
+						"value": "@activity('Call Scalar SP').output.firstRow.result",
 						"type": "Expression"
 					}
 				}
