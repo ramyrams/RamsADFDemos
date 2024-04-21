@@ -60,7 +60,7 @@
 				"typeProperties": {
 					"variableName": "SPOut",
 					"value": {
-						"value": "@=activity('Call SP').output.firstRow.value",
+						"value": "@activity('Call SP').output.firstRow.result",
 						"type": "Expression"
 					}
 				}
@@ -80,7 +80,7 @@
 				"type": "String"
 			},
 			"SPOut": {
-				"type": "Array"
+				"type": "Integer"
 			}
 		},
 		"annotations": []
