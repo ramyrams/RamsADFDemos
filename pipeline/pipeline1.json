@@ -1,0 +1,88 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Verify city exisitance",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@bool(contains(pipeline().parameters.listOfCities, pipeline().parameters.cityToSearch))",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Set variable - City Not Exists",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "ifCityExists",
+								"value": "“No. It Does Not Exist”"
+							}
+						},
+						{
+							"name": "Fail1",
+							"type": "Fail",
+							"dependsOn": [
+								{
+									"activity": "Set variable - City Not Exists",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"message": "City is not avilable in the array",
+								"errorCode": "111"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Set variable - City Exists",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "ifCityExists",
+								"value": "“Yes. It Exists”"
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"listOfCities": {
+				"type": "array",
+				"defaultValue": [
+					"New York",
+					"London",
+					"Tokyo"
+				]
+			},
+			"cityToSearch": {
+				"type": "string",
+				"defaultValue": "London"
+			}
+		},
+		"variables": {
+			"ifCityExists": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
