@@ -1,0 +1,9 @@
+{
+	"name": "Azure Functions",
+	"properties": {
+		"folder": {
+			"name": "Activity"
+		},
+		"annotations": []
+	}
+}
