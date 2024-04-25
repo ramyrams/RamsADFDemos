@@ -1,0 +1,200 @@
+{
+	"name": "adf_arrays_sample_pl",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup Notes_Syllabic",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_csvFile",
+						"type": "DatasetReference",
+						"parameters": {
+							"ContainerName": "MyContainer",
+							"Directory": "sourcecsv",
+							"FileName": "Notes.csv"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Set_Notes_Alphabet",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Notes_Alphabet",
+					"value": {
+						"value": "@split(variables('Notes_Alphabet_String'),'-')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Combing Notes",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup Notes_Syllabic",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set_Notes_Alphabet",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ForEach_Array_Value",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup Notes_Syllabic').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Append Music Notes",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Notes_Combined",
+								"value": {
+									"value": "@concat(item().ID,'-',item().Note,'-',variables('Notes_Alphabet')[add(int(item().ID),-1)])",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Notes_Combined_View",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Combing Notes",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Notes_Combined_View",
+					"value": {
+						"value": "@variables('Notes_Combined')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach_Array_Value",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('Var_Array_Number')",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Wait 1 second",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"Notes_Syllabic": {
+				"type": "Array"
+			},
+			"Notes_Alphabet": {
+				"type": "Array"
+			},
+			"Notes_Alphabet_String": {
+				"type": "String",
+				"defaultValue": "C-D-E-F-G-A-B"
+			},
+			"Notes_Combined": {
+				"type": "Array"
+			},
+			"Notes_Combined_View": {
+				"type": "Array"
+			},
+			"Var_Array_Text": {
+				"type": "Array",
+				"defaultValue": [
+					"C",
+					"D",
+					"E",
+					"F",
+					"G",
+					"A",
+					"B"
+				]
+			},
+			"Var_Array_Number": {
+				"type": "Array",
+				"defaultValue": [
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7
+				]
+			}
+		},
+		"folder": {
+			"name": "Working with Arrays"
+		},
+		"annotations": []
+	}
+}
