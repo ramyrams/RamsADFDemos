@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "Search array element - Fail if city not exisits",
 	"properties": {
 		"activities": [
 			{
