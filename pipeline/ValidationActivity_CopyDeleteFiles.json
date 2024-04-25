@@ -1,0 +1,237 @@
+{
+	"name": "ValidationActivity_CopyDeleteFiles",
+	"properties": {
+		"activities": [
+			{
+				"name": "EnumerateFolderList",
+				"description": "Scan the file path on your source ADLS and get the container list.",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"fieldList": [
+						"childItems"
+					]
+				}
+			},
+			{
+				"name": "ForEachFolder",
+				"description": "Get the folder list from Metadata activity and then iterates each of them to Copy activity.",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "EnumerateFolderList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('EnumerateFolderList').output.childItems",
+						"type": "Expression"
+					},
+					"batchCount": 4,
+					"activities": [
+						{
+							"name": "CopyOneFolder",
+							"description": "Copy each folder from source ADLS to destination ADLS folder.",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [
+								{
+									"name": "Source",
+									"value": "@concat(pipeline().parameters.SourceFilePath,'/',item().name)"
+								},
+								{
+									"name": "Destination",
+									"value": "@concat(pipeline().parameters.DestinationFilePath,'/',item().name)"
+								}
+							],
+							"typeProperties": {
+								"source": {
+									"type": "AzureDataLakeStoreSource",
+									"recursive": true
+								},
+								"sink": {
+									"type": "AzureDataLakeStoreSink"
+								},
+								"enableStaging": false,
+								"dataIntegrationUnits": 0
+							}
+						},
+						{
+							"name": "DeleteFiles",
+							"type": "Delete",
+							"dependsOn": [
+								{
+									"activity": "CopyOneFolder",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"enableLogging": true,
+								"recursive": true
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Email Notification",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Run Calculations",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Check if Folder empty",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://prod-31.eastus.logic.azure.com:443/workflows/001cc7857fac4b41bd535a8ca3ec9e3e/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=f-qhwimTZz8R7fgJ3nz5VTqx0sPOD4akHLeBIDDt5Mg",
+					"body": {
+						"DataFactoryName": "@{pipeline().DataFactory}",
+						"PipelineName": "@{pipeline().Pipeline}",
+						"Message": "Copy Operation finished.",
+						"EmailTo": "@pipeline().parameters.par_email_address"
+					}
+				}
+			},
+			{
+				"name": "Check If Folder exists",
+				"type": "Validation",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"timeout": "7.00:00:00",
+					"sleep": 1
+				}
+			},
+			{
+				"name": "Check if File exists",
+				"type": "Validation",
+				"dependsOn": [
+					{
+						"activity": "Check If Folder exists",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"timeout": "7.00:00:00",
+					"sleep": 1
+				}
+			},
+			{
+				"name": "Check if Folder empty",
+				"type": "Validation",
+				"dependsOn": [
+					{
+						"activity": "ForEachFolder",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"timeout": "7.00:00:00",
+					"sleep": 1
+				}
+			},
+			{
+				"name": "Run Calculations",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Check if File exists",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "ForEachFolder",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Notebooks/SampleNotebookScala"
+				}
+			}
+		],
+		"parameters": {
+			"SourceFilePath": {
+				"type": "String",
+				"defaultValue": "/storesales"
+			},
+			"DestinationFilePath": {
+				"type": "String",
+				"defaultValue": "/storesales-staging"
+			},
+			"par_email_address": {
+				"type": "String",
+				"defaultValue": "rimayev@hotmail.com"
+			}
+		},
+		"folder": {
+			"name": "UsecaseDemo"
+		},
+		"annotations": []
+	}
+}
