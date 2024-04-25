@@ -1,0 +1,26 @@
+{
+	"name": "Call  webhook when the event happens - WebHook",
+	"properties": {
+		"activities": [
+			{
+				"name": "WebHook1",
+				"type": "WebHook",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "\thttps://webhook.site/607d3299-a94c-414c-bff2-bb5e69b147ea",
+					"method": "POST",
+					"body": {
+						"message": "Ram"
+					},
+					"timeout": "00:10:00"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
