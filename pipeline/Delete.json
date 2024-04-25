@@ -2,7 +2,7 @@
 	"name": "Delete",
 	"properties": {
 		"folder": {
-			"name": "Activity"
+			"name": "ActivityDemo"
 		},
 		"annotations": []
 	}
