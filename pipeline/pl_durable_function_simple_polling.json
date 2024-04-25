@@ -1,5 +1,5 @@
 {
-	"name": "Delete files with Azure Data Factory Time",
+	"name": "pl_durable_function_simple_polling",
 	"properties": {
 		"description": "Please input a folder path as the parameter for this pipeline, and the pipeline will delete files which were last modified more than 30 days ago under the particular folder path.",
 		"activities": [
