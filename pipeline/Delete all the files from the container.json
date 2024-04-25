@@ -1,5 +1,5 @@
 {
-	"name": "CopyFiles_DeleteFiles_Blob",
+	"name": "Delete all the files from the container",
 	"properties": {
 		"description": "Copy all files across multiple containers or buckets from one file-based storage store to another and Email Notification",
 		"activities": [
@@ -122,6 +122,9 @@
 				"type": "String",
 				"defaultValue": "rimayev@hotmail.com"
 			}
+		},
+		"folder": {
+			"name": "UsecaseDemo"
 		},
 		"annotations": []
 	}

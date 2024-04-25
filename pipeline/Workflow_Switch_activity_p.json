@@ -177,6 +177,9 @@
 				"defaultValue": "copy"
 			}
 		},
+		"folder": {
+			"name": "UsecaseDemo"
+		},
 		"annotations": []
 	}
 }
