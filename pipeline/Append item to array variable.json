@@ -50,6 +50,9 @@
 				"type": "Array"
 			}
 		},
+		"folder": {
+			"name": "Activity"
+		},
 		"annotations": []
 	}
 }

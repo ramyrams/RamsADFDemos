@@ -83,6 +83,9 @@
 				"type": "Integer"
 			}
 		},
+		"folder": {
+			"name": "Activity"
+		},
 		"annotations": []
 	}
 }

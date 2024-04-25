@@ -177,9 +177,6 @@
 				"defaultValue": "copy"
 			}
 		},
-		"folder": {
-			"name": "Switch Activity"
-		},
 		"annotations": []
 	}
 }

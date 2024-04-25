@@ -87,6 +87,9 @@
 				"defaultValue": "0"
 			}
 		},
+		"folder": {
+			"name": "Activity"
+		},
 		"annotations": []
 	}
 }

@@ -38,6 +38,9 @@
 				}
 			}
 		],
+		"folder": {
+			"name": "Activity"
+		},
 		"annotations": []
 	}
 }

@@ -1,0 +1,9 @@
+{
+	"name": "Copy - JSON file",
+	"properties": {
+		"folder": {
+			"name": "Activity"
+		},
+		"annotations": []
+	}
+}
