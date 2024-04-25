@@ -1,0 +1,43 @@
+{
+	"name": "Filter the data - Filter Activity",
+	"properties": {
+		"activities": [
+			{
+				"name": "Filter1",
+				"type": "Filter",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.listOfCities",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith(item(), 'L')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"listOfCities": {
+				"type": "array",
+				"defaultValue": [
+					"New York",
+					"London",
+					"Tokyo"
+				]
+			},
+			"cityToSearch": {
+				"type": "string",
+				"defaultValue": "London"
+			}
+		},
+		"variables": {
+			"ifCityExists": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
