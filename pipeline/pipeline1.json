@@ -8,7 +8,50 @@
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
-					"cases": [],
+					"on": {
+						"value": "@pipeline().parameters.CondValue",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "1",
+							"activities": [
+								{
+									"name": "Set variable2",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "OutValue",
+										"value": 2
+									}
+								}
+							]
+						},
+						{
+							"value": "2",
+							"activities": [
+								{
+									"name": "Set variable3",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "OutValue",
+										"value": 3
+									}
+								}
+							]
+						}
+					],
 					"defaultActivities": [
 						{
 							"name": "Set variable1",
@@ -18,16 +61,30 @@
 								"secureOutput": false,
 								"secureInput": false
 							},
-							"userProperties": []
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "OutValue",
+								"value": 1
+							}
 						}
 					]
 				}
 			}
 		],
+		"parameters": {
+			"CondValue": {
+				"type": "string",
+				"defaultValue": "0"
+			}
+		},
 		"variables": {
 			"SwitchValue": {
 				"type": "Integer",
-				"defaultValue": 1
+				"defaultValue": 2
+			},
+			"OutValue": {
+				"type": "Integer",
+				"defaultValue": 0
 			}
 		},
 		"annotations": []
