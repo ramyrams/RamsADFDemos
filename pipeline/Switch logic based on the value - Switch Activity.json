@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "Switch logic based on the value - Switch Activity",
 	"properties": {
 		"activities": [
 			{
-				"name": "Switch1",
+				"name": "MySwitch",
 				"type": "Switch",
 				"dependsOn": [],
 				"userProperties": [],
@@ -17,7 +17,7 @@
 							"value": "1",
 							"activities": [
 								{
-									"name": "Set variable2",
+									"name": "Switch1",
 									"type": "SetVariable",
 									"dependsOn": [],
 									"policy": {
@@ -27,7 +27,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"variableName": "OutValue",
-										"value": 2
+										"value": "2"
 									}
 								}
 							]
@@ -36,7 +36,7 @@
 							"value": "2",
 							"activities": [
 								{
-									"name": "Set variable3",
+									"name": "Switch2",
 									"type": "SetVariable",
 									"dependsOn": [],
 									"policy": {
@@ -46,7 +46,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"variableName": "OutValue",
-										"value": 3
+										"value": "3"
 									}
 								}
 							]
@@ -54,7 +54,7 @@
 					],
 					"defaultActivities": [
 						{
-							"name": "Set variable1",
+							"name": "SwitchDefault",
 							"type": "SetVariable",
 							"dependsOn": [],
 							"policy": {
@@ -64,7 +64,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "OutValue",
-								"value": 1
+								"value": "1"
 							}
 						}
 					]
@@ -83,8 +83,8 @@
 				"defaultValue": 2
 			},
 			"OutValue": {
-				"type": "Integer",
-				"defaultValue": 0
+				"type": "String",
+				"defaultValue": "0"
 			}
 		},
 		"annotations": []

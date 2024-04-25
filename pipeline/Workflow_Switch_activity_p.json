@@ -1,0 +1,185 @@
+{
+	"name": "Workflow_Switch_activity_p",
+	"properties": {
+		"description": "https://github.com/NrgFly/Azure-DataFactory/blob/master/Samples/pipeline/Workflow_Switch_activity_pl.json",
+		"activities": [
+			{
+				"name": "Get File Names",
+				"description": "Scan the file path on your source storage store and get the container list.",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "Template_wasb_single_source_ds",
+						"type": "DatasetReference"
+					},
+					"fieldList": []
+				}
+			},
+			{
+				"name": "Check File Action",
+				"type": "Switch",
+				"dependsOn": [
+					{
+						"activity": "Get File Names",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@pipeline().parameters.FileAction",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "copy",
+							"activities": [
+								{
+									"name": "Copy Data Files 2",
+									"description": "Copy each container from source storage store to destination store.",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BlobSource",
+											"recursive": true
+										},
+										"sink": {
+											"type": "BlobSink",
+											"copyBehavior": "PreserveHierarchy"
+										},
+										"enableStaging": false,
+										"dataIntegrationUnits": 2
+									}
+								}
+							]
+						},
+						{
+							"value": "delete",
+							"activities": [
+								{
+									"name": "Delete Data Files 2",
+									"type": "Delete",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"enableLogging": true,
+										"recursive": true
+									}
+								}
+							]
+						},
+						{
+							"value": "move",
+							"activities": [
+								{
+									"name": "Copy Data Files",
+									"description": "Copy each container from source storage store to destination store.",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [
+										{
+											"name": "Source",
+											"value": "@concat(pipeline().parameters.SourceFilePath,'/',item().name)"
+										},
+										{
+											"name": "Destination",
+											"value": "@concat(pipeline().parameters.DestinationFilePath,'/',item().name)"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "BlobSource",
+											"recursive": true
+										},
+										"sink": {
+											"type": "BlobSink",
+											"copyBehavior": "PreserveHierarchy"
+										},
+										"enableStaging": false,
+										"dataIntegrationUnits": 0
+									}
+								},
+								{
+									"name": "Delete Data Files",
+									"type": "Delete",
+									"dependsOn": [
+										{
+											"activity": "Copy Data Files",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"enableLogging": true,
+										"recursive": true
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"SourceFilePath": {
+				"type": "String",
+				"defaultValue": "/storesales-source"
+			},
+			"DestinationFilePath": {
+				"type": "String",
+				"defaultValue": "/storesales-staging"
+			},
+			"FileAction": {
+				"type": "string",
+				"defaultValue": "copy"
+			}
+		},
+		"folder": {
+			"name": "Switch Activity"
+		},
+		"annotations": []
+	}
+}
