@@ -1,0 +1,78 @@
+{
+	"name": "Calculate Area - Set Activity",
+	"properties": {
+		"description": "\nhttps://learn.microsoft.com/en-us/azure/data-factory/control-flow-set-variable-activity\nhttps://learn.microsoft.com/en-us/azure/data-factory/control-flow-expression-language-functions#mul\n",
+		"activities": [
+			{
+				"name": "Set Var - Length",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Length",
+					"value": 10
+				}
+			},
+			{
+				"name": "Set var  - Breath",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Breath",
+					"value": 20
+				}
+			},
+			{
+				"name": "Calculate Area",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Set Var - Length",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Set var  - Breath",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Area",
+					"value": {
+						"value": "@mul(variables('Breath'),variables('Length') )",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"Length": {
+				"type": "Integer"
+			},
+			"Breath": {
+				"type": "Integer"
+			},
+			"Area": {
+				"type": "Integer"
+			}
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"name": "Append item to array variable",
+	"properties": {
+		"activities": [
+			{
+				"name": "Append Item to Pipeline Array",
+				"type": "AppendVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "AnimalArray",
+					"value": "\"Rat\""
+				}
+			},
+			{
+				"name": "Verify the output array",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Append Item to Pipeline Array",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "OutArray",
+					"value": {
+						"value": "@variables('AnimalArray')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"AnimalArray": {
+				"type": "Array",
+				"defaultValue": [
+					"Dog",
+					"Cat",
+					"Lion"
+				]
+			},
+			"OutArray": {
+				"type": "Array"
+			}
+		},
+		"annotations": []
+	}
+}
