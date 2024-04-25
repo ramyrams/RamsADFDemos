@@ -1,0 +1,153 @@
+{
+	"name": "bdata_adf_variable_append_pl",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get FeedType",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "FeedType",
+					"value": {
+						"value": "@replace(pipeline().parameters.FileName, 'Sales.csv','')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If Daily DataFeed",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get FeedType",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(variables('FeedType'), 'Daily')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy Data Daily",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BlobSource",
+									"recursive": true
+								},
+								"sink": {
+									"type": "SqlSink",
+									"writeBatchSize": 10000
+								},
+								"enableStaging": false,
+								"dataIntegrationUnits": 0,
+								"translator": {
+									"type": "TabularTranslator",
+									"columnMappings": {
+										"Date": "Date",
+										"Account ID": "Account_ID",
+										"Sales": "Sales"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "If Monthly DataFeed",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get FeedType",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(variables('FeedType'), 'Monthly')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Copy Data Monthly",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BlobSource",
+									"recursive": true
+								},
+								"sink": {
+									"type": "SqlSink",
+									"writeBatchSize": 10000
+								},
+								"enableStaging": false,
+								"dataIntegrationUnits": 0,
+								"translator": {
+									"type": "TabularTranslator",
+									"columnMappings": {
+										"Year": "Year",
+										"Month": "Month",
+										"Account ID": "Account_ID",
+										"Total Sales": "Total_Sales"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"FilePath": {
+				"type": "String",
+				"defaultValue": "salesdata/"
+			},
+			"FileName": {
+				"type": "String",
+				"defaultValue": "DailySales.csv"
+			}
+		},
+		"variables": {
+			"FeedType": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "UsecaseDemo"
+		},
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
