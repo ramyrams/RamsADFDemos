@@ -1,0 +1,76 @@
+{
+	"name": "For Each",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.MyArray",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Append variable1",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "OutArray",
+								"value": {
+									"value": "@item()",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "AppendedArray",
+					"value": {
+						"value": "@pipeline().parameters.MyArray",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"MyArray": {
+				"type": "array",
+				"defaultValue": [
+					"Rams",
+					"noted"
+				]
+			}
+		},
+		"variables": {
+			"OutArray": {
+				"type": "Array"
+			},
+			"AppendedArray": {
+				"type": "Array"
+			}
+		},
+		"annotations": []
+	}
+}
