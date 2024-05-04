@@ -13,7 +13,7 @@
 						"type": "Expression"
 					},
 					"condition": {
-						"value": "@startswith(item(), 'L')",
+						"value": "@startswith(item(), pipeline().parameters.cityToSearch)",
 						"type": "Expression"
 					}
 				}
