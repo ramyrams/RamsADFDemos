@@ -1,0 +1,46 @@
+{
+	"name": "ds_dy_json_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sa_myblobdata",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"Storageaccountname": "straccdata"
+			}
+		},
+		"parameters": {
+			"containeraname": {
+				"type": "string",
+				"defaultValue": "mycontainer"
+			},
+			"FolderName": {
+				"type": "string",
+				"defaultValue": "datasource"
+			},
+			"datasourcefile": {
+				"type": "string",
+				"defaultValue": "USStates.json"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().datasourcefile",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().FolderName",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().containeraname",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {}
+	}
+}
